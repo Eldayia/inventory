@@ -74,6 +74,66 @@ export const pagesService = {
   }
 }
 
+// Service pour les statistiques
+export const statsService = {
+  // Récupérer les statistiques globales
+  async getGlobalStats() {
+    try {
+      // Nombre total de pages
+      const { count: pagesCount, error: pagesError } = await supabase
+        .from('pages')
+        .select('*', { count: 'exact', head: true })
+      
+      if (pagesError) throw pagesError
+
+      // Nombre total d'items
+      const { count: itemsCount, error: itemsError } = await supabase
+        .from('items')
+        .select('*', { count: 'exact', head: true })
+      
+      if (itemsError) throw itemsError
+
+      // Pages les plus récentes
+      const { data: recentPages, error: recentError } = await supabase
+        .from('pages')
+        .select('name, created_at')
+        .order('created_at', { ascending: false })
+        .limit(3)
+      
+      if (recentError) throw recentError
+
+      // Statistiques par type de logo (collections par catégorie)
+      const { data: logoStats, error: logoError } = await supabase
+        .from('pages')
+        .select('logo')
+      
+      if (logoError) throw logoError
+
+      // Compter les logos
+      const logoCount = logoStats.reduce((acc, page) => {
+        const logo = page.logo || 'collection'
+        acc[logo] = (acc[logo] || 0) + 1
+        return acc
+      }, {})
+
+      return {
+        totalPages: pagesCount || 0,
+        totalItems: itemsCount || 0,
+        recentPages: recentPages || [],
+        logoStats: logoCount
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement des statistiques:', error)
+      return {
+        totalPages: 0,
+        totalItems: 0,
+        recentPages: [],
+        logoStats: {}
+      }
+    }
+  }
+}
+
 // Service pour les items
 export const itemsService = {
   // Récupérer tous les items d'une page
