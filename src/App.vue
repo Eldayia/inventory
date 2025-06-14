@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen transition-colors duration-200" :class="{ 'dark': isDark }">
+  <div class="min-h-screen flex flex-col transition-colors duration-200" :class="{ 'dark': isDark }">
     <!-- Header -->
     <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 relative z-30">
       <div class="px-4 sm:px-6 lg:px-8">
@@ -24,7 +24,7 @@
                   <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
               </div>
-              <h1 class="text-xl font-bold text-gray-900 dark:text-white">FlexiList</h1>
+              <h1 class="text-xl font-bold text-gray-900 dark:text-white">Inventory</h1>
             </router-link>
           </div>
           
@@ -85,7 +85,7 @@
                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <span class="text-lg font-semibold text-gray-900 dark:text-white">FlexiList</span>
+            <span class="text-lg font-semibold text-gray-900 dark:text-white">Inventory</span>
           </div>
         </div>
         
@@ -165,12 +165,29 @@
       </aside>
 
       <!-- Contenu principal -->
-      <main class="flex-1 lg:ml-0">
-        <div class="px-4 sm:px-6 lg:px-8 py-8">
+      <main class="flex-1 lg:ml-0 flex flex-col">
+        <div class="flex-1 px-4 sm:px-6 lg:px-8 py-8">
           <router-view />
         </div>
       </main>
     </div>
+    
+    <!-- Pied de page fixe en bas -->
+    <footer class="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 mt-auto">
+      <div class="px-4 sm:px-6 lg:px-8 py-4">
+        <div class="text-center text-sm text-gray-500 dark:text-gray-400">
+          <span>Inventory by EldaDev - </span>
+          <a 
+            href="https://github.com/Eldayia" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors underline"
+          >
+            https://github.com/Eldayia
+          </a>
+        </div>
+      </div>
+    </footer>
     
     <!-- Modal des paramètres -->
     <SettingsModal 

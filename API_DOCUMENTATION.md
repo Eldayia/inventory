@@ -1,10 +1,10 @@
-# FlexiList API Documentation
+# Inventory API Documentation
 
-Documentation complète de l'API FlexiList pour l'automatisation et l'intégration avec des outils comme n8n et des agents IA.
+Documentation complète de l'API Inventory pour l'automatisation et l'intégration avec des outils comme n8n et des agents IA.
 
 ## 🔐 Authentification
 
-FlexiList utilise l'authentification Supabase. Toutes les requêtes doivent inclure :
+Inventory utilise l'authentification Supabase. Toutes les requêtes doivent inclure :
 
 ```http
 Authorization: Bearer YOUR_SUPABASE_ANON_KEY

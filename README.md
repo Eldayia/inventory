@@ -1,6 +1,6 @@
-# FlexiList - Gestionnaire d'Inventaire Flexible
+# Inventory - Gestionnaire d'Inventaire Flexible
 
-FlexiList est une application web moderne et responsive pour la gestion d'inventaires personnels, conçue comme un tableur Notion/Airtable simplifié avec une forte composante de personnalisation.
+Inventory est une application web moderne et responsive pour la gestion d'inventaires personnels, conçue comme un tableur Notion/Airtable simplifié avec une forte composante de personnalisation.
 
 ## 🚀 Fonctionnalités
 
@@ -181,7 +181,7 @@ npm run build
 
 ## 🔧 API Documentation
 
-FlexiList expose une API RESTful complète pour l'automatisation et l'intégration avec des outils comme n8n.
+Inventory expose une API RESTful complète pour l'automatisation et l'intégration avec des outils comme n8n.
 
 ### Authentification
 Utilisez votre clé Supabase anon dans l'en-tête :
@@ -283,4 +283,4 @@ Si vous rencontrez des problèmes :
 
 ---
 
-**FlexiList** - Organisez vos données comme vous le souhaitez ! 🎯
+**Inventory** - Organisez vos données comme vous le souhaitez ! 🎯
