@@ -75,6 +75,7 @@ Exécutez ce SQL dans l'éditeur Supabase :
 CREATE TABLE pages (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   name TEXT NOT NULL,
+  logo TEXT DEFAULT 'collection',
   columns JSONB DEFAULT '[]'::jsonb,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()

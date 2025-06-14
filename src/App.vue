@@ -50,7 +50,7 @@
 
     <!-- Contenu principal -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <router-view :developerMode="developerMode" />
+      <router-view />
     </main>
     
     <!-- Modal des paramètres -->
@@ -58,7 +58,6 @@
       :isOpen="showSettings" 
       @close="showSettings = false"
       @themeChange="handleThemeChange"
-      @developerModeChange="handleDeveloperModeChange"
     />
   </div>
 </template>
@@ -71,7 +70,6 @@ import SettingsModal from './components/SettingsModal.vue'
 const isDark = ref(false)
 const showSettings = ref(false)
 const themePreference = ref('system')
-const developerMode = ref(false)
 
 // Gestion du thème
 const toggleTheme = () => {
@@ -91,10 +89,6 @@ const toggleTheme = () => {
 const handleThemeChange = (newTheme) => {
   themePreference.value = newTheme
   applyTheme()
-}
-
-const handleDeveloperModeChange = (newMode) => {
-  developerMode.value = newMode
 }
 
 const applyTheme = () => {
@@ -125,9 +119,6 @@ const updateDocumentClass = () => {
 onMounted(() => {
   const savedThemePreference = localStorage.getItem('themePreference') || 'system'
   themePreference.value = savedThemePreference
-  
-  const savedDeveloperMode = localStorage.getItem('developerMode') === 'true'
-  developerMode.value = savedDeveloperMode
   
   applyTheme()
   
