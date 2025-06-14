@@ -49,6 +49,26 @@
           </div>
         </div>
 
+        <!-- Mode développeur -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            Mode développeur
+          </label>
+          <div class="space-y-2">
+            <label class="flex items-center">
+              <input 
+                type="checkbox" 
+                v-model="developerMode" 
+                class="mr-3 text-primary-600 rounded"
+              >
+              <span class="text-sm text-gray-700 dark:text-gray-300">Afficher les IDs de base de données</span>
+            </label>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              Affiche les identifiants uniques des pages, lignes et colonnes pour les automatisations N8N ou l'accès direct à la base de données.
+            </p>
+          </div>
+        </div>
+
         <!-- Import/Export -->
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
@@ -126,10 +146,11 @@ const props = defineProps({
   isOpen: Boolean
 })
 
-const emit = defineEmits(['close', 'themeChange'])
+const emit = defineEmits(['close', 'themeChange', 'developerModeChange'])
 
 // État
 const themePreference = ref('system')
+const developerMode = ref(false)
 const isExporting = ref(false)
 const isImporting = ref(false)
 const statusMessage = ref('')
@@ -139,12 +160,21 @@ const statusType = ref('success')
 onMounted(() => {
   const savedTheme = localStorage.getItem('themePreference') || 'system'
   themePreference.value = savedTheme
+  
+  const savedDeveloperMode = localStorage.getItem('developerMode') === 'true'
+  developerMode.value = savedDeveloperMode
 })
 
 // Surveiller les changements de thème
 watch(themePreference, (newTheme) => {
   localStorage.setItem('themePreference', newTheme)
   emit('themeChange', newTheme)
+})
+
+// Surveiller les changements du mode développeur
+watch(developerMode, (newMode) => {
+  localStorage.setItem('developerMode', newMode.toString())
+  emit('developerModeChange', newMode)
 })
 
 // Export des données

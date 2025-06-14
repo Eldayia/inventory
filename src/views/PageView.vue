@@ -112,6 +112,10 @@
                       :title="'Double-cliquez pour renommer - Type: ' + getColumnTypeLabel(column.type)"
                     >
                       {{ column.name }}
+                      <!-- Mode développeur: affichage de l'ID de la colonne -->
+                      <div v-if="developerMode" class="text-xs text-blue-600 dark:text-blue-400 font-mono mt-1">
+                        ID: {{ column.id }}
+                      </div>
                     </span>
                   </div>
                   
@@ -176,12 +180,18 @@
               :class="{ 'bg-blue-50 dark:bg-blue-900/20': selectedItems.includes(item.id) }"
             >
               <td class="px-4 py-3">
-                <input 
-                  type="checkbox" 
-                  :value="item.id" 
-                  v-model="selectedItems"
-                  class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-                >
+                <div class="flex flex-col items-center">
+                  <input 
+                    type="checkbox" 
+                    :value="item.id" 
+                    v-model="selectedItems"
+                    class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                  >
+                  <!-- Mode développeur: affichage de l'ID de la ligne -->
+                  <div v-if="developerMode" class="text-xs text-blue-600 dark:text-blue-400 font-mono mt-1">
+                    {{ item.id }}
+                  </div>
+                </div>
               </td>
               <td 
                 v-for="column in page.columns" 
@@ -263,6 +273,13 @@ import ColumnModal from '@/components/ColumnModal.vue'
 import Papa from 'papaparse'
 
 // Props
+const props = defineProps({
+  developerMode: {
+    type: Boolean,
+    default: false
+  }
+})
+
 const route = useRoute()
 const pageId = route.params.id
 

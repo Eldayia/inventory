@@ -75,6 +75,11 @@
           {{ page.columns?.length || 0 }} colonnes
         </div>
         
+        <!-- Mode développeur: affichage de l'ID -->
+        <div v-if="developerMode" class="text-xs text-blue-600 dark:text-blue-400 mb-2 font-mono bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded">
+          ID: {{ page.id }}
+        </div>
+        
         <div class="text-xs text-gray-500 dark:text-gray-500">
           Créé le {{ formatDate(page.created_at) }}
         </div>
@@ -177,6 +182,14 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
 import { pagesService } from '@/services/supabase'
+
+// Props
+const props = defineProps({
+  developerMode: {
+    type: Boolean,
+    default: false
+  }
+})
 
 // État
 const pages = ref([])
