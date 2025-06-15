@@ -1,4 +1,4 @@
-import { db } from './database'
+import db from './database.js'
 
 // Service pour les pages
 export const pagesService = {
@@ -51,23 +51,52 @@ export const pagesService = {
 
   // Récupérer les statistiques globales
   async getGlobalStats() {
-    const pagesCount = await db.query('pages', 'select', { select: 'count(*) as count' })
-    const itemsCount = await db.query('items', 'select', { select: 'count(*) as count' })
-    const logoStats = await db.query('pages', 'select', { select: 'logo' })
-
-    // Compter les logos
-    const logoCount = logoStats.reduce((acc, page) => {
+    // Utiliser une approche simple en récupérant toutes les données
+    const pages = await db.query('pages', 'select', { select: 'id,name,logo,created_at' })
+    const items = await db.query('items', 'select', { select: 'id' })
+    
+    const logoCount = pages.reduce((acc, page) => {
       const logo = page.logo || 'collection'
       acc[logo] = (acc[logo] || 0) + 1
       return acc
     }, {})
 
+    // Récupérer les pages récentes (5 dernières)
+    const recentPages = pages
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      .slice(0, 5)
+      .map(page => ({
+        id: page.id,
+        name: page.name,
+        logo: page.logo || 'collection',
+        created_at: page.created_at
+      }))
+
     return {
-      totalPages: parseInt(pagesCount[0]?.count || 0),
-      totalItems: parseInt(itemsCount[0]?.count || 0),
+      totalPages: pages.length || 0,
+      totalItems: items.length || 0,
+      recentPages: recentPages,
       logoStats: logoCount
     }
   }
+}
+
+// Service pour les statistiques
+export const statsService = {
+  async getGlobalStats() {
+    return await pagesService.getGlobalStats()
+  }
+}
+
+// Export du client Supabase pour compatibilité
+export const supabase = {
+  // Méthodes de base pour compatibilité
+  from: (table) => ({
+    select: () => ({ data: [], error: null }),
+    insert: () => ({ data: [], error: null }),
+    update: () => ({ data: [], error: null }),
+    delete: () => ({ data: [], error: null })
+  })
 }
 
 // Service pour les items
@@ -75,7 +104,11 @@ export const itemsService = {
   // Récupérer tous les items d'une page
   async getItems(pageId) {
     return await db.query('items', 'select', {
-      where: { page_id: pageId }
+      where: { page_id: pageId },
+      order: {
+        column: 'created_at',
+        options: { ascending: false }
+      }
     })
   },
 

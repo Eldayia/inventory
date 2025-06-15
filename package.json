@@ -9,11 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.3.11",
-    "vue-router": "^4.2.5",
     "@supabase/supabase-js": "^2.38.4",
     "@vueuse/core": "^10.7.0",
-    "pg": "^8.11.3"
+    "papaparse": "^5.5.3",
+    "pg": "^8.11.3",
+    "vue": "^3.3.11",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",

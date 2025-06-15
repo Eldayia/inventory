@@ -1,5 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
-import pg from 'pg'
+
+// Conditionally import pg only when needed
+let pg = null
+if (typeof window === 'undefined' && import.meta.env.VITE_DB_TYPE === 'postgresql') {
+  pg = await import('pg')
+}
 
 class DatabaseService {
   constructor() {
@@ -10,6 +15,9 @@ class DatabaseService {
       const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
       this.client = createClient(supabaseUrl, supabaseKey)
     } else if (this.dbType === 'postgresql') {
+      if (!pg) {
+        throw new Error('PostgreSQL non disponible dans l\'environnement navigateur')
+      }
       this.client = new pg.Pool({
         host: import.meta.env.VITE_PG_HOST,
         port: import.meta.env.VITE_PG_PORT,
@@ -27,7 +35,7 @@ class DatabaseService {
   async query(table, operation, params = {}) {
     if (this.dbType === 'supabase') {
       return this._supabaseQuery(table, operation, params)
-    } else {
+    } else if (this.dbType === 'postgresql') {
       return this._postgresQuery(table, operation, params)
     }
   }
@@ -37,7 +45,11 @@ class DatabaseService {
 
     switch (operation) {
       case 'select':
-        query = query.select(params.select || '*')
+        if (params.count) {
+          query = query.select(params.select || '*', { count: params.count })
+        } else {
+          query = query.select(params.select || '*')
+        }
         if (params.where) {
           Object.entries(params.where).forEach(([key, value]) => {
             query = query.eq(key, value)
@@ -156,4 +168,5 @@ class DatabaseService {
   }
 }
 
-export const db = new DatabaseService()
+const db = new DatabaseService()
+export default db

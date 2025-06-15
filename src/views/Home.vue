@@ -271,16 +271,15 @@ const showFinalDeleteModal = ref(false)
 const editingPage = ref(null)
 const pageToDelete = ref(null)
 const nameInput = ref(null)
+const pageForm = ref({
+  name: '',
+  logo: 'collection'
+})
 const stats = ref({
   totalPages: 0,
   totalItems: 0,
   recentPages: [],
   logoStats: {}
-})
-
-const pageForm = ref({
-  name: '',
-  logo: 'collection'
 })
 
 // Logos disponibles avec SVG
