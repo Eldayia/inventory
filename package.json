@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "npm run generate-icons && vite build",
+    "preview": "vite preview",
+    "generate-icons": "node scripts/generate-icons.js",
+    "check-pwa": "node scripts/check-pwa.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.38.4",
@@ -20,7 +22,10 @@
     "@vitejs/plugin-vue": "^4.5.2",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.32",
+    "sharp": "^0.34.2",
     "tailwindcss": "^3.3.6",
-    "vite": "^5.0.8"
+    "vite": "^5.0.8",
+    "vite-plugin-pwa": "^1.0.0",
+    "workbox-window": "^7.3.0"
   }
 }

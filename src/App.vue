@@ -195,6 +195,9 @@
       @close="showSettings = false"
       @themeChange="handleThemeChange"
     />
+    
+    <!-- Notifications de mise à jour PWA -->
+    <PWAUpdatePrompt />
   </div>
 </template>
 
@@ -203,6 +206,7 @@ import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { usePages } from './composables/usePages'
 import SettingsModal from './components/SettingsModal.vue'
+import PWAUpdatePrompt from './components/PWAInstallPrompt.vue'
 
 // État
 const isDark = ref(false)

@@ -2,6 +2,45 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Styles PWA spécifiques */
+@media (display-mode: standalone) {
+  /* Styles quand l'app est installée */
+  body {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Masquer la barre d'adresse sur iOS */
+  .min-h-screen {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+}
+
+/* Amélioration du touch sur mobile */
+@media (hover: none) and (pointer: coarse) {
+  .hover\:bg-gray-100:hover {
+    background-color: rgb(243 244 246);
+  }
+  
+  .hover\:bg-gray-700:hover {
+    background-color: rgb(55 65 81);
+  }
+  
+  /* Améliorer les zones de touch */
+  button, .btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Améliorer le scroll sur mobile */
+  .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 @layer base {
   html {
     font-family: 'Inter', system-ui, sans-serif;
