@@ -255,16 +255,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, computed } from 'vue'
+import { ref, onMounted, nextTick, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { pagesService, itemsService } from '@/services/supabase'
+import { usePages } from '@/composables/usePages'
 import CellEditor from '@/components/CellEditor.vue'
 import ColumnModal from '@/components/ColumnModal.vue'
 import Papa from 'papaparse'
 
 // Props
 const route = useRoute()
-const pageId = route.params.id
+const pageId = computed(() => route.params.id)
+
+// Utiliser le composable global pour les pages
+const { updatePage: updateGlobalPage } = usePages()
 
 // État
 const page = ref(null)
@@ -368,7 +372,7 @@ const selectAll = computed({
 // Méthodes
 const loadPage = async () => {
   try {
-    page.value = await pagesService.getPage(pageId)
+    page.value = await pagesService.getPage(pageId.value)
     if (!page.value.columns) {
       page.value.columns = []
     }
@@ -379,7 +383,7 @@ const loadPage = async () => {
 
 const loadItems = async () => {
   try {
-    items.value = await itemsService.getItems(pageId)
+    items.value = await itemsService.getItems(pageId.value)
   } catch (error) {
     console.error('Erreur lors du chargement des items:', error)
   }
@@ -402,8 +406,10 @@ const startEditTitle = async () => {
 const saveTitle = async () => {
   if (titleEdit.value.trim() && titleEdit.value !== page.value.name) {
     try {
-      await pagesService.updatePage(pageId, { name: titleEdit.value.trim() })
+      const updatedPage = await pagesService.updatePage(pageId.value, { name: titleEdit.value.trim() })
       page.value.name = titleEdit.value.trim()
+      // Mettre à jour la sidebar
+      updateGlobalPage(pageId.value, { name: titleEdit.value.trim() })
     } catch (error) {
       console.error('Erreur lors de la sauvegarde du titre:', error)
     }
@@ -489,7 +495,7 @@ const saveColumn = async (columnData) => {
           items.value = updatedItems
         }
         
-        await pagesService.updatePage(pageId, { columns: updatedColumns })
+        await pagesService.updatePage(pageId.value, { columns: updatedColumns })
         page.value.columns = updatedColumns
       }
     } else {
@@ -503,7 +509,7 @@ const saveColumn = async (columnData) => {
       }
       
       const updatedColumns = [...page.value.columns, newColumn]
-      await pagesService.updatePage(pageId, { columns: updatedColumns })
+      await pagesService.updatePage(pageId.value, { columns: updatedColumns })
       page.value.columns = updatedColumns
     }
     
@@ -526,7 +532,7 @@ const saveColumnName = async (column) => {
       const updatedColumns = page.value.columns.map(col => 
         col.id === column.id ? { ...col, name: columnEdit.value.name.trim() } : col
       )
-      await pagesService.updatePage(pageId, { columns: updatedColumns })
+      await pagesService.updatePage(pageId.value, { columns: updatedColumns })
       page.value.columns = updatedColumns
     } catch (error) {
       console.error('Erreur lors de la sauvegarde du nom de colonne:', error)
@@ -549,7 +555,7 @@ const moveColumn = async (fromIndex, direction) => {
   columns.splice(toIndex, 0, movedColumn)
   
   try {
-    await pagesService.updatePage(pageId, { columns })
+    await pagesService.updatePage(pageId.value, { columns })
     page.value.columns = columns
   } catch (error) {
     console.error('Erreur lors du déplacement de la colonne:', error)
@@ -560,7 +566,7 @@ const deleteColumn = async (column) => {
   if (confirm(`Voulez-vous vraiment supprimer la colonne "${column.name}" ?`)) {
     try {
       const updatedColumns = page.value.columns.filter(col => col.id !== column.id)
-      await pagesService.updatePage(pageId, { columns: updatedColumns })
+      await pagesService.updatePage(pageId.value, { columns: updatedColumns })
       page.value.columns = updatedColumns
       
       // Supprimer les données de cette colonne dans tous les items
@@ -597,7 +603,7 @@ const getColumnTypeLabel = (type) => {
 const addItem = async () => {
   try {
     const newItem = {
-      page_id: pageId,
+      page_id: pageId.value,
       data: {},
       order_index: items.value.length
     }
@@ -674,7 +680,7 @@ const importCSV = (event) => {
           })
           
           return {
-            page_id: pageId,
+            page_id: pageId.value,
             data,
             order_index: items.value.length + index
           }
@@ -719,7 +725,7 @@ const handleResize = (event) => {
 const stopResize = async () => {
   if (resizing.value) {
     try {
-      await pagesService.updatePage(pageId, { columns: page.value.columns })
+      await pagesService.updatePage(pageId.value, { columns: page.value.columns })
     } catch (error) {
       console.error('Erreur lors de la sauvegarde de la largeur:', error)
     }
@@ -729,6 +735,13 @@ const stopResize = async () => {
   document.removeEventListener('mousemove', handleResize)
   document.removeEventListener('mouseup', stopResize)
 }
+
+// Watcher pour recharger les données quand l'ID de page change
+watch(pageId, (newPageId, oldPageId) => {
+  if (newPageId !== oldPageId) {
+    loadData()
+  }
+}, { immediate: false })
 
 // Initialisation
 onMounted(() => {
