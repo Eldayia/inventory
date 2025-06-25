@@ -66,13 +66,8 @@ export default defineConfig({
     },
   },
   server: {
-<<<<<<< HEAD
-    host: '0.0.0.0',
-    port: 3000,
-=======
     host: '0.0.0.0', // Exposer sur toutes les interfaces réseau
     port: 8080, // Port plus standard
->>>>>>> a2e4b1a12ee51d895d612be3d0426016c7d09fea
     open: true
   }
 })

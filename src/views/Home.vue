@@ -18,8 +18,8 @@
     </div>
 
     <!-- Statistiques d'accueil -->
-    <div v-if="!loading && pages.length > 0" class="mb-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div v-if="!loading && pages.length > 0" class="mb-12">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- Nombre total de collections -->
         <div class="card p-4">
           <div class="flex items-center">
@@ -82,15 +82,15 @@
       </div>
 
       <!-- Activité récente -->
-      <div v-if="stats.recentPages.length > 0" class="card p-6 mb-6">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+      <div v-if="stats.recentPages.length > 0" class="card p-6 mt-8">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
           <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
           Activité récente
         </h3>
-        <div class="space-y-3">
-          <div v-for="page in stats.recentPages" :key="page.name" class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
+        <div class="space-y-4">
+          <div v-for="page in stats.recentPages" :key="page.name" class="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
             <div class="flex items-center">
               <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
               <span class="text-gray-900 dark:text-white font-medium">{{ page.name }}</span>
