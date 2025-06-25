@@ -195,23 +195,28 @@
       @close="showSettings = false"
       @themeChange="handleThemeChange"
     />
+    
+    <!-- Notifications de mise à jour PWA -->
+    <PWAUpdatePrompt />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { pagesService } from './services/supabase'
+import { usePages } from './composables/usePages'
 import SettingsModal from './components/SettingsModal.vue'
+import PWAUpdatePrompt from './components/PWAInstallPrompt.vue'
 
 // État
 const isDark = ref(false)
 const showSettings = ref(false)
 const themePreference = ref('system')
 const sidebarOpen = ref(false)
-const pages = ref([])
-const loadingPages = ref(true)
 const route = useRoute()
+
+// Utiliser le composable global pour les pages
+const { pages, loadingPages, loadPages } = usePages()
 
 // Gestion du thème
 const toggleTheme = () => {
@@ -266,18 +271,7 @@ const closeSidebar = () => {
   sidebarOpen.value = false
 }
 
-// Charger les pages pour la sidebar
-const loadPages = async () => {
-  try {
-    loadingPages.value = true
-    const data = await pagesService.getPages()
-    pages.value = data || []
-  } catch (error) {
-    console.error('Erreur lors du chargement des pages:', error)
-  } finally {
-    loadingPages.value = false
-  }
-}
+// Les pages sont maintenant gérées par le composable global
 
 // Fonction pour obtenir le logo d'une page
 const getPageLogo = (logoName) => {

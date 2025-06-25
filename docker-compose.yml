@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # Application Inventory PWA
+  inventory-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: inventory-pwa
+    ports:
+      - "80:80"     # Production
+      - "8080:80"   # Alternative
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - inventory-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.inventory.rule=Host(`inventory.local`)"
+      - "traefik.http.services.inventory.loadbalancer.server.port=80"
+
+  # Reverse Proxy Traefik (optionnel)
+  traefik:
+    image: traefik:v2.10
+    container_name: inventory-traefik
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"  # Dashboard Traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - inventory-network
+    restart: unless-stopped
+    profiles:
+      - traefik
+
+  # Service de développement (optionnel)
+  inventory-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: inventory-dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+    networks:
+      - inventory-network
+    profiles:
+      - dev
+
+networks:
+  inventory-network:
+    driver: bridge
+
+volumes:
+  inventory-data:
+    driver: local 

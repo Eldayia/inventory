@@ -262,26 +262,28 @@
 <script setup>
 import { ref, onMounted, nextTick, computed } from 'vue'
 import { pagesService, statsService } from '@/services/supabase'
+import { usePages } from '@/composables/usePages'
 
 // État
-const pages = ref([])
 const loading = ref(true)
+
+// Utiliser le composable global pour les pages
+const { pages, loadPages, addPage, updatePage, removePage } = usePages()
 const showCreateModal = ref(false)
 const showDeleteModal = ref(false)
 const showFinalDeleteModal = ref(false)
 const editingPage = ref(null)
 const pageToDelete = ref(null)
 const nameInput = ref(null)
+const pageForm = ref({
+  name: '',
+  logo: 'collection'
+})
 const stats = ref({
   totalPages: 0,
   totalItems: 0,
   recentPages: [],
   logoStats: {}
-})
-
-const pageForm = ref({
-  name: '',
-  logo: 'collection'
 })
 
 // Logos disponibles avec SVG
@@ -349,13 +351,13 @@ const availableLogos = ref([
 ])
 
 // Méthodes
-const loadPages = async () => {
+const loadData = async () => {
   try {
     loading.value = true
-    pages.value = await pagesService.getPages()
+    await loadPages()
     await loadStats()
   } catch (error) {
-    console.error('Erreur lors du chargement des pages:', error)
+    console.error('Erreur lors du chargement des données:', error)
   } finally {
     loading.value = false
   }
@@ -375,18 +377,20 @@ const savePage = async () => {
   try {
     if (editingPage.value) {
       console.log('Mise à jour de la page:', editingPage.value.id)
-      await pagesService.updatePage(editingPage.value.id, { 
+      const updatedPage = await pagesService.updatePage(editingPage.value.id, { 
         name: pageForm.value.name,
         logo: pageForm.value.logo 
       })
+      updatePage(editingPage.value.id, updatedPage)
     } else {
       console.log('Création d\'une nouvelle page')
-      await pagesService.createPage({ 
+      const newPage = await pagesService.createPage({ 
         name: pageForm.value.name,
         logo: pageForm.value.logo 
       })
+      addPage(newPage)
     }
-    await loadPages()
+    await loadStats()
     closeModal()
     console.log('Sauvegarde réussie')
   } catch (error) {
@@ -416,7 +420,8 @@ const confirmFirstDelete = () => {
 const confirmFinalDelete = async () => {
   try {
     await pagesService.deletePage(pageToDelete.value.id)
-    await loadPages()
+    removePage(pageToDelete.value.id)
+    await loadStats()
     closeFinalDeleteModal()
   } catch (error) {
     console.error('Erreur lors de la suppression:', error)
@@ -470,6 +475,6 @@ const getPageLogo = (logoName) => {
 
 // Initialisation
 onMounted(() => {
-  loadPages()
+  loadData()
 })
 </script>

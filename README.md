@@ -4,6 +4,12 @@ Inventory est une application web moderne et responsive pour la gestion d'invent
 
 ## 🚀 Fonctionnalités
 
+### 📱 Progressive Web App (PWA)
+- ✅ **Installation mobile** - Ajoutez l'app à votre écran d'accueil
+- ✅ **Fonctionnement hors ligne** - Cache intelligent pour une utilisation sans internet
+- ✅ **Mises à jour automatiques** - L'app se met à jour automatiquement
+- ✅ **Expérience native** - Interface optimisée pour mobile et desktop
+
 ### Gestion des Pages
 - ✅ Créer des pages d'inventaire personnalisées
 - ✅ Renommer les pages (double-clic)
@@ -129,6 +135,24 @@ yarn dev
 ```
 
 L'application sera disponible sur `http://localhost:3000`
+
+## 📱 Installation PWA
+
+Inventory peut être installé comme une application native sur votre appareil !
+
+### Android
+1. Ouvrez l'app dans Chrome/Edge
+2. Appuyez sur le menu (⋮) → "Ajouter à l'écran d'accueil"
+3. Ou cliquez sur l'icône d'installation dans la barre d'adresse
+
+### iOS
+1. Ouvrez l'app dans Safari
+2. Appuyez sur le bouton de partage (⬆️)
+3. Sélectionnez "Sur l'écran d'accueil"
+
+📖 **Guides complets** : 
+- [PWA_GUIDE.md](./PWA_GUIDE.md) - Guide général PWA
+- [INSTALLATION_NATIVE.md](./INSTALLATION_NATIVE.md) - Installation via le navigateur
 
 ## 🚀 Déploiement
 
