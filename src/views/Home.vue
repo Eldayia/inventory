@@ -91,11 +91,14 @@
         </h3>
         <div class="space-y-4">
           <div v-for="page in stats.recentPages" :key="page.name" class="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
-            <div class="flex items-center">
+            <router-link 
+              :to="`/page/${page.id}`" 
+              class="flex items-center group flex-1 hover:text-primary-600 transition-colors"
+            >
               <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-              <span class="text-gray-900 dark:text-white font-medium">{{ page.name }}</span>
-            </div>
-            <span class="text-sm text-gray-500 dark:text-gray-400">{{ formatDate(page.created_at) }}</span>
+              <span class="text-gray-900 dark:text-white font-medium group-hover:text-primary-600">{{ page.name }}</span>
+            </router-link>
+            <span class="text-sm text-gray-500 dark:text-gray-400 ml-4">{{ formatDate(page.created_at) }}</span>
           </div>
         </div>
       </div>
