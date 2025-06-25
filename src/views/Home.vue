@@ -1,14 +1,14 @@
 <template>
   <div>
     <!-- En-tête avec bouton de création -->
-    <div class="flex justify-between items-center mb-8">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Mes Inventaires</h1>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Mes Inventaires</h1>
         <p class="text-gray-600 dark:text-gray-400 mt-2">Gérez vos collections et inventaires personnels</p>
       </div>
       <button 
         @click="showCreateModal = true" 
-        class="btn btn-primary flex items-center space-x-2"
+        class="btn btn-primary flex items-center space-x-2 w-full sm:w-auto justify-center"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
@@ -19,7 +19,7 @@
 
     <!-- Statistiques d'accueil -->
     <div v-if="!loading && pages.length > 0" class="mb-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Nombre total de collections -->
         <div class="card p-4">
           <div class="flex items-center">
@@ -119,24 +119,24 @@
       </button>
     </div>
 
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <div 
         v-for="page in pages" 
         :key="page.id" 
-        class="card p-6 hover:shadow-md transition-shadow cursor-pointer group"
+        class="card p-4 hover:shadow-md transition-shadow cursor-pointer group"
         @click="$router.push(`/page/${page.id}`)"
       >
-        <div class="flex justify-between items-start mb-4">
-          <div class="flex items-center space-x-3">
+        <div class="flex justify-between items-start">
+          <div class="flex items-center space-x-3 min-w-0">
             <div class="w-8 h-8 text-primary-600 dark:text-primary-400 flex-shrink-0" v-html="getPageLogo(page.logo)"></div>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors">
+            <h3 class="text-base sm:text-lg font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors truncate">
               {{ page.name }}
             </h3>
           </div>
-          <div class="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div class="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity ml-2">
             <button 
               @click.stop="editPage(page)" 
-              class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+              class="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
               title="Renommer"
             >
               <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -145,7 +145,7 @@
             </button>
             <button 
               @click.stop="deletePage(page)" 
-              class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-red-500"
+              class="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-red-500"
               title="Supprimer"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,12 +155,13 @@
           </div>
         </div>
         
-        <div class="text-sm text-gray-600 dark:text-gray-400 mb-3">
-          {{ page.columns?.length || 0 }} colonnes
-        </div>
-        
-        <div class="text-xs text-gray-500 dark:text-gray-500">
-          Créé le {{ formatDate(page.created_at) }}
+        <div class="mt-3 flex flex-col space-y-1">
+          <div class="text-sm text-gray-600 dark:text-gray-400">
+            {{ page.columns?.length || 0 }} colonnes
+          </div>
+          <div class="text-xs text-gray-500 dark:text-gray-500">
+            Créé le {{ formatDate(page.created_at) }}
+          </div>
         </div>
       </div>
     </div>

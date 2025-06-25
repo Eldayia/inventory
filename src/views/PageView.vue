@@ -10,215 +10,215 @@
 
   <div v-else>
     <!-- En-tête de la page -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
-      <div class="flex-1">
-        <div class="flex items-center space-x-3">
-          <router-link to="/" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-            </svg>
-          </router-link>
-          <div class="w-8 h-8 text-primary-600 dark:text-primary-400 flex-shrink-0" v-html="getPageLogo(page.logo)"></div>
-          <h1 
-            v-if="!editingTitle" 
-            @dblclick="startEditTitle" 
-            class="text-2xl font-bold text-gray-900 dark:text-white cursor-pointer hover:text-primary-600 transition-colors"
-            title="Double-cliquez pour renommer"
-          >
-            {{ page.name }}
-          </h1>
-          <input 
-            v-else
-            v-model="titleEdit"
-            @blur="saveTitle"
-            @keyup.enter="saveTitle"
-            @keyup.escape="cancelEditTitle"
-            class="text-2xl font-bold bg-transparent border-b-2 border-primary-500 outline-none text-gray-900 dark:text-white"
-            ref="titleInput"
-          >
+    <div class="flex flex-col space-y-4 mb-6">
+      <div class="flex items-start space-x-3">
+        <router-link to="/" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 mt-1">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </router-link>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-start sm:items-center space-x-3">
+            <div class="w-8 h-8 text-primary-600 dark:text-primary-400 flex-shrink-0" v-html="getPageLogo(page.logo)"></div>
+            <h1 
+              v-if="!editingTitle" 
+              @dblclick="startEditTitle" 
+              class="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white cursor-pointer hover:text-primary-600 transition-colors truncate"
+              title="Double-cliquez pour renommer"
+            >
+              {{ page.name }}
+            </h1>
+            <input 
+              v-else
+              v-model="titleEdit"
+              @blur="saveTitle"
+              @keyup.enter="saveTitle"
+              @keyup.escape="cancelEditTitle"
+              class="text-xl sm:text-2xl font-bold bg-transparent border-b-2 border-primary-500 outline-none text-gray-900 dark:text-white w-full"
+              ref="titleInput"
+            >
+          </div>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ items.length }} éléments</p>
         </div>
-        <p class="text-gray-600 dark:text-gray-400 mt-1">{{ items.length }} éléments</p>
       </div>
       
-      <div class="flex items-center space-x-3">
-        <!-- Boutons d'import/export -->
-        <div class="flex items-center space-x-2">
-          <input 
-            ref="fileInput" 
-            type="file" 
-            accept=".csv" 
-            @change="importCSV" 
-            class="hidden"
-          >
-          <button @click="$refs.fileInput.click()" class="btn btn-secondary text-sm">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
-            </svg>
-            Importer
-          </button>
-          <button @click="exportCSV" class="btn btn-secondary text-sm">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-            </svg>
-            Exporter
-          </button>
-        </div>
-        
-        <button @click="addColumn" class="btn btn-primary">
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="flex flex-wrap gap-2 -mx-4 sm:mx-0 px-4 sm:px-0">
+        <button 
+          @click="addColumn" 
+          class="btn btn-primary btn-sm flex-1 sm:flex-none flex items-center justify-center space-x-2"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
           </svg>
-          Ajouter une colonne
+          <span>Ajouter une colonne</span>
+        </button>
+        
+        <label 
+          class="btn btn-secondary btn-sm flex-1 sm:flex-none flex items-center justify-center space-x-2 cursor-pointer"
+          title="Importer depuis CSV"
+        >
+          <input 
+            type="file" 
+            accept=".csv" 
+            class="hidden" 
+            @change="importCSV"
+          >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+          </svg>
+          <span>Importer</span>
+        </label>
+        
+        <button 
+          @click="exportCSV" 
+          class="btn btn-secondary btn-sm flex-1 sm:flex-none flex items-center justify-center space-x-2"
+          title="Exporter en CSV"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+          </svg>
+          <span>Exporter</span>
         </button>
       </div>
     </div>
 
     <!-- Grille -->
     <div class="card overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="w-full">
-          <!-- En-tête des colonnes -->
-          <thead class="bg-gray-50 dark:bg-gray-700">
-            <tr>
-              <th class="w-12 px-4 py-3 text-left">
-                <input 
-                  type="checkbox" 
-                  v-model="selectAll" 
-                  @change="toggleSelectAll"
-                  class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+      <div class="overflow-x-auto -mx-4 sm:mx-0">
+        <div class="min-w-full inline-block align-middle">
+          <div class="overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <!-- En-tête des colonnes -->
+              <thead class="bg-gray-50 dark:bg-gray-700">
+                <tr>
+                  <th class="w-10 sm:w-12 px-3 sm:px-4 py-2 sm:py-3 text-left">
+                    <div class="flex items-center justify-center">
+                      <input 
+                        type="checkbox" 
+                        v-model="selectAll" 
+                        @change="toggleSelectAll"
+                        class="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 focus:ring-offset-0"
+                      >
+                    </div>
+                  </th>
+                  <th 
+                    v-for="(column, index) in page.columns" 
+                    :key="column.id"
+                    class="relative px-2 sm:px-4 py-2 sm:py-3 text-left text-sm font-medium text-gray-900 dark:text-white border-r border-gray-200 dark:border-gray-600 last:border-r-0 whitespace-nowrap"
+                    :style="{ minWidth: '120px', width: column.width + 'px' }"
+                  >
+                    <div class="flex items-center justify-between group">
+                      <span class="truncate">{{ column.name }}</span>
+                      
+                      <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button 
+                          @click="editColumn(column)"
+                          class="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded text-blue-500"
+                          title="Modifier la colonne"
+                        >
+                          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                          </svg>
+                        </button>
+                        <button 
+                          @click="moveColumn(index, -1)"
+                          :disabled="index === 0"
+                          class="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded disabled:opacity-50"
+                          title="Déplacer à gauche"
+                        >
+                          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                          </svg>
+                        </button>
+                        <button 
+                          @click="moveColumn(index, 1)"
+                          :disabled="index === page.columns.length - 1"
+                          class="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded disabled:opacity-50"
+                          title="Déplacer à droite"
+                        >
+                          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                          </svg>
+                        </button>
+                        <button 
+                          @click="deleteColumn(column)"
+                          class="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded text-red-500"
+                          title="Supprimer la colonne"
+                        >
+                          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <!-- Redimensionneur de colonne -->
+                    <div 
+                      class="column-resizer"
+                      @mousedown="startResize($event, column)"
+                    ></div>
+                  </th>
+                </tr>
+              </thead>
+              
+              <!-- Corps du tableau -->
+              <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                <tr 
+                  v-for="(item, itemIndex) in items" 
+                  :key="item.id"
+                  class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  :class="{ 'bg-blue-50 dark:bg-blue-900/20': selectedItems.includes(item.id) }"
                 >
-              </th>
-              <th 
-                v-for="(column, index) in page.columns" 
-                :key="column.id"
-                class="relative px-4 py-3 text-left font-medium text-gray-900 dark:text-white border-r border-gray-200 dark:border-gray-600 last:border-r-0"
-                :style="{ width: column.width + 'px' }"
-              >
-                <div class="flex items-center justify-between group">
-                  <div class="flex-1">
-                    <input 
-                      v-if="editingColumn === column.id"
-                      v-model="columnEdit.name"
-                      @blur="saveColumnName(column)"
-                      @keyup.enter="saveColumnName(column)"
-                      @keyup.escape="cancelEditColumn"
-                      class="bg-transparent border-none outline-none w-full font-medium"
-                      ref="columnInput"
-                    >
-                    <span 
-                      v-else
-                      @dblclick="startEditColumn(column)"
-                      class="cursor-pointer hover:text-primary-600 transition-colors"
-                      :title="'Double-cliquez pour renommer - Type: ' + getColumnTypeLabel(column.type)"
-                    >
-                      {{ column.name }}
-                    </span>
-                  </div>
-                  
-                  <!-- Menu des actions de colonne -->
-                  <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button 
-                      @click="editColumn(column)"
-                      class="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded text-blue-500"
-                      title="Modifier la colonne"
-                    >
-                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                      </svg>
-                    </button>
-                    <button 
-                      @click="moveColumn(index, -1)"
-                      :disabled="index === 0"
-                      class="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded disabled:opacity-50"
-                      title="Déplacer à gauche"
-                    >
-                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                      </svg>
-                    </button>
-                    <button 
-                      @click="moveColumn(index, 1)"
-                      :disabled="index === page.columns.length - 1"
-                      class="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded disabled:opacity-50"
-                      title="Déplacer à droite"
-                    >
-                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                      </svg>
-                    </button>
-                    <button 
-                      @click="deleteColumn(column)"
-                      class="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded text-red-500"
-                      title="Supprimer la colonne"
-                    >
-                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
+                  <td class="w-10 sm:w-12 px-3 sm:px-4 py-2 sm:py-3">
+                    <div class="flex items-center justify-center">
+                      <input 
+                        type="checkbox" 
+                        :value="item.id" 
+                        v-model="selectedItems"
+                        class="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500 focus:ring-offset-0"
+                      >
+                    </div>
+                  </td>
+                  <td 
+                    v-for="column in page.columns" 
+                    :key="column.id"
+                    class="px-2 sm:px-4 py-2 sm:py-3 border-r border-gray-200 dark:border-gray-600 last:border-r-0"
+                  >
+                    <CellEditor 
+                      :value="item.data[column.id]"
+                      :column="column"
+                      @update="updateCell(item.id, column.id, $event)"
+                    />
+                  </td>
+                </tr>
                 
-                <!-- Redimensionneur de colonne -->
-                <div 
-                  class="column-resizer"
-                  @mousedown="startResize($event, column)"
-                ></div>
-              </th>
-            </tr>
-          </thead>
-          
-          <!-- Corps du tableau -->
-          <tbody>
-            <tr 
-              v-for="(item, itemIndex) in items" 
-              :key="item.id"
-              class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-              :class="{ 'bg-blue-50 dark:bg-blue-900/20': selectedItems.includes(item.id) }"
-            >
-              <td class="px-4 py-3">
-                <input 
-                  type="checkbox" 
-                  :value="item.id" 
-                  v-model="selectedItems"
-                  class="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-                >
-              </td>
-              <td 
-                v-for="column in page.columns" 
-                :key="column.id"
-                class="px-4 py-3 border-r border-gray-200 dark:border-gray-600 last:border-r-0"
-              >
-                <CellEditor 
-                  :value="item.data[column.id]"
-                  :column="column"
-                  @update="updateCell(item.id, column.id, $event)"
-                />
-              </td>
-            </tr>
-            
-            <!-- Ligne vide pour ajouter un nouvel item -->
-            <tr class="border-b border-gray-200 dark:border-gray-700">
-              <td class="px-4 py-3">
-                <button 
-                  @click="addItem"
-                  class="w-6 h-6 rounded-full bg-primary-600 text-white hover:bg-primary-700 transition-colors flex items-center justify-center"
-                  title="Ajouter une ligne"
-                >
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                  </svg>
-                </button>
-              </td>
-              <td 
-                v-for="column in page.columns" 
-                :key="column.id"
-                class="px-4 py-3 border-r border-gray-200 dark:border-gray-600 last:border-r-0 text-gray-400 dark:text-gray-500"
-              >
-                <span class="text-sm italic">Nouvelle ligne...</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                <!-- Ligne vide pour ajouter un nouvel item -->
+                <tr>
+                  <td class="w-10 sm:w-12 px-3 sm:px-4 py-2 sm:py-3">
+                    <div class="flex items-center justify-center">
+                      <button 
+                        @click="addItem"
+                        class="w-6 h-6 rounded-full bg-primary-600 text-white hover:bg-primary-700 transition-colors flex items-center justify-center"
+                        title="Ajouter une ligne"
+                      >
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                  <td 
+                    v-for="column in page.columns" 
+                    :key="column.id"
+                    class="px-2 sm:px-4 py-2 sm:py-3 border-r border-gray-200 dark:border-gray-600 last:border-r-0 text-gray-400 dark:text-gray-500"
+                  >
+                    <span class="text-sm italic">Nouvelle ligne...</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -307,7 +307,7 @@ const availableLogos = ref([
   { 
     name: 'games', 
     label: 'Jeux vidéo', 
-    svg: '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M15.5 6.5C15.5 5.66 14.84 5 14 5S12.5 5.66 12.5 6.5 13.16 8 14 8s1.5-.66 1.5-1.5zM19.5 12c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zM18 13.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zM16.5 12c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zM21 9h-3.5c-.83 0-1.5.67-1.5 1.5v3c0 .83.67 1.5 1.5 1.5H21c.83 0 1.5-.67 1.5-1.5v-3c0-.83-.67-1.5-1.5-1.5zM6.5 9H3c-.83 0-1.5.67-1.5 1.5v3c0 .83.67 1.5 1.5 1.5h3.5c.83 0 1.5-.67 1.5-1.5v-3C8 9.67 7.33 9 6.5 9zM5 11.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zM6.5 13c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zM4.5 13c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zM3 11.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5z"/></svg>' 
+    svg: '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M15.5 6.5C15.5 5.66 14.84 5 14 5S12.5 5.66 12.5 6.5 13.16 8 14 8s1.5-.66 1.5-1.5zM19.5 12c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5.5.5zM18 13.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5.5.5zM16.5 12c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5.5.5zM21 9h-3.5c-.83 0-1.5.67-1.5 1.5v3c0 .83.67 1.5 1.5 1.5H21c.83 0 1.5-.67 1.5-1.5v-3c0-.83-.67-1.5-1.5-1.5zM6.5 9H3c-.83 0-1.5.67-1.5 1.5v3c0 .83.67 1.5 1.5 1.5h3.5c.83 0 1.5-.67 1.5-1.5v-3C8 9.67 7.33 9 6.5 9zM5 11.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zM6.5 13c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zM4.5 13c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zM3 11.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5z"/></svg>' 
   },
   { 
     name: 'lego', 
